@@ -43,6 +43,7 @@ Resources:
     Properties:
       FunctionName: !Ref MavenProjectName
       Role: !GetAtt LambdaExecutionRole.Arn
+      Handler: bluegreen.StreamLambdaHandler::handleRequest # code dependant
       Code:
         S3Bucket: !Ref MavenProjectName
         S3Key: !Sub '${MavenProjectName}/app.jar'
