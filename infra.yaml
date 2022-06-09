@@ -139,17 +139,17 @@ Resources:
       - "ApiGatewayProxyMethod"
     Type: AWS::ApiGateway::Deployment
 
-  Permission2:
+  Permission:
     Properties:
-      FunctionName: !Sub '${LambdaFunction}:ApiGatewayStageName2'
+      FunctionName: !Sub '${LambdaFunction}:ApiGatewayStageName'
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/*/${ResourceEndpoint}
     Type: AWS::Lambda::Permission
 
-  Permission:
+  Permission2:
     Properties:
-      FunctionName: !Sub '${LambdaFunction}:ApiGatewayStageName'
+      FunctionName: !Sub '${LambdaFunction}:ApiGatewayStageName2'
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/*/${ResourceEndpoint}
