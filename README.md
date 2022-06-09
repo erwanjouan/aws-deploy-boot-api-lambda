@@ -12,3 +12,5 @@ Path part set to "api"
 ### Use lambda alias with Api Gateway stages
 
 https://aws.amazon.com/blogs/compute/using-api-gateway-stage-variables-to-manage-lambda-functions/
+
+https://octopus.com/blog/deploying-lambdas
