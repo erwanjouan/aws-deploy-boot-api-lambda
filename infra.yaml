@@ -83,7 +83,7 @@ Resources:
       Name: !Ref ApiGatewayStageName
     Type: AWS::Lambda::Alias
 
-  LambdaAlias:
+  LambdaAlias2:
     Properties:
       FunctionName: !Ref LambdaFunction
       FunctionVersion: !GetAtt LambdaVersion.Version
