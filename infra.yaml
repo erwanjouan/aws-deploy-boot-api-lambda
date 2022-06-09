@@ -141,7 +141,7 @@ Resources:
 
   Permission:
     Properties:
-      FunctionName: !Sub '${LambdaFunction}:ApiGatewayStageName'
+      FunctionName: !Sub '${LambdaFunction}:${ApiGatewayStageName}'
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/*/${ResourceEndpoint}
@@ -149,7 +149,7 @@ Resources:
 
   Permission2:
     Properties:
-      FunctionName: !Sub '${LambdaFunction}:ApiGatewayStageName2'
+      FunctionName: !Sub '${LambdaFunction}:${ApiGatewayStageName2}'
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/*/${ResourceEndpoint}
