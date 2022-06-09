@@ -135,6 +135,7 @@ Resources:
     Properties:
       RestApiId: !Ref ApiGateway
       DeploymentId: !Ref ApiGatewayDeployment
+      StageName: !Ref ApiGatewayStageName
       Variables:
         stage: !Ref ApiGatewayStageName
     Type: AWS::ApiGateway::Stage
@@ -159,6 +160,7 @@ Resources:
     Properties:
       RestApiId: !Ref ApiGateway
       DeploymentId: !Ref ApiGatewayDeployment2
+      StageName: !Ref ApiGatewayStageName2
       Variables:
         stage: !Ref ApiGatewayStageName2
     Type: AWS::ApiGateway::Stage
