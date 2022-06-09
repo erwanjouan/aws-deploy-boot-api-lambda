@@ -11,9 +11,6 @@ Parameters:
     Type: String
     AllowedPattern: "[a-z0-9]+"
     Default: dev
-  ApiGatewayHTTPMethod:
-    Type: String
-    Default: ANY
   ResourceEndpoint:
     Type: String
     Default: '{proxy+}'
@@ -91,7 +88,7 @@ Resources:
   ApiGatewayProxyMethod:
     Properties:
       AuthorizationType: NONE
-      HttpMethod: !Ref ApiGatewayHTTPMethod
+      HttpMethod: ANY
       ResourceId: !Ref ProxyResource
       RestApiId: !Ref ApiGateway
       Integration:
@@ -100,7 +97,7 @@ Resources:
         IntegrationResponses:
           - StatusCode: 200
         Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations'
           - lambdaArn: !GetAtt LambdaFunction.Arn
     Type: AWS::ApiGateway::Method
 
@@ -117,7 +114,9 @@ Resources:
       FunctionName: !GetAtt 'LambdaFunction.Arn'
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/${ApiGatewayHTTPMethod}/${ResourceEndpoint}
+      SourceArn: !Sub
+        - 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayId}/*/*/${proxy+}'
+        - ApiGatewayId: !Ref ApiGateway
     Type: AWS::Lambda::Permission
 
 Outputs:
