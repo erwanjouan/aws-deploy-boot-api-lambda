@@ -11,6 +11,9 @@ Parameters:
     Type: String
     AllowedPattern: "[a-z0-9]+"
     Default: dev
+  ApiGatewayHTTPMethod:
+    Type: String
+    Default: ANY
   ResourceEndpoint:
     Type: String
     Default: '{proxy+}'
@@ -88,7 +91,7 @@ Resources:
   ApiGatewayProxyMethod:
     Properties:
       AuthorizationType: NONE
-      HttpMethod: ANY
+      HttpMethod: !Ref ApiGatewayHTTPMethod
       ResourceId: !Ref ProxyResource
       RestApiId: !Ref ApiGateway
       Integration:
