@@ -55,6 +55,9 @@ Resources:
       Code:
         S3Bucket: !Ref ArtifactOutputBucket
         S3Key: !Sub '${MavenProjectName}/app.jar'
+      Tags:
+        - Key: COMMIT_ID
+          Value: !Ref GitCommitId
     Type: AWS::Lambda::Function
 
   LambdaFunctionLogGroup:
