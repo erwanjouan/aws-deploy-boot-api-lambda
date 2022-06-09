@@ -131,13 +131,13 @@ Resources:
       - "ApiGatewayProxyMethod"
     Type: AWS::ApiGateway::Deployment
 
-  ApiGatewayDeployment2:
+  ApiGatewayStage:
     Properties:
       RestApiId: !Ref ApiGateway
-      StageName: !Ref ApiGatewayStageName2
-    DependsOn:
-      - "ApiGatewayProxyMethod"
-    Type: AWS::ApiGateway::Deployment
+      DeploymentId: !Ref ApiGatewayDeployment
+      Variables:
+        stage: !Ref ApiGatewayStageName
+    Type: AWS::ApiGateway::Stage
 
   Permission:
     Properties:
@@ -146,6 +146,22 @@ Resources:
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/*/${ResourceEndpoint}
     Type: AWS::Lambda::Permission
+
+  ApiGatewayDeployment2:
+    Properties:
+      RestApiId: !Ref ApiGateway
+      StageName: !Ref ApiGatewayStageName2
+    DependsOn:
+      - "ApiGatewayProxyMethod"
+    Type: AWS::ApiGateway::Deployment
+
+  ApiGatewayStage2:
+    Properties:
+      RestApiId: !Ref ApiGateway
+      DeploymentId: !Ref ApiGatewayDeployment2
+      Variables:
+        stage: !Ref ApiGatewayStageName2
+    Type: AWS::ApiGateway::Stage
 
   Permission2:
     Properties:
