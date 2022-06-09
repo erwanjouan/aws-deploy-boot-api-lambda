@@ -9,11 +9,11 @@ Parameters:
     Type: String
   ArtifactOutputBucket:
     Type: String
-  ApiGatewayStageName:
+  ApiGatewayDevStageName:
     Type: String
     AllowedPattern: "[a-z0-9]+"
     Default: dev
-  ApiGatewayStageName2:
+  ApiGatewayProdStageName:
     Type: String
     AllowedPattern: "[a-z0-9]+"
     Default: prod
@@ -76,18 +76,18 @@ Resources:
       Description: Function versionning
     Type: AWS::Lambda::Version
 
-  LambdaAlias:
+  LambdaDevAlias:
     Properties:
       FunctionName: !Ref LambdaFunction
       FunctionVersion: !GetAtt LambdaVersion.Version
-      Name: !Ref ApiGatewayStageName
+      Name: !Ref ApiGatewayDevStageName
     Type: AWS::Lambda::Alias
 
-  LambdaAlias2:
+  LambdaProdAlias:
     Properties:
       FunctionName: !Ref LambdaFunction
       FunctionVersion: !GetAtt LambdaVersion.Version
-      Name: !Ref ApiGatewayStageName2
+      Name: !Ref ApiGatewayProdStageName
     Type: AWS::Lambda::Alias
 
   ##########################
@@ -134,40 +134,40 @@ Resources:
     Properties:
       RestApiId: !Ref ApiGateway
       DeploymentId: !Ref ApiGatewayDeployment
-      StageName: !Ref ApiGatewayStageName
+      StageName: !Ref ApiGatewayDevStageName
       Variables:
-        stage: !Ref ApiGatewayStageName
+        stage: !Ref ApiGatewayDevStageName
     Type: AWS::ApiGateway::Stage
 
   Permission:
     Properties:
-      FunctionName: !Ref LambdaAlias
+      FunctionName: !Ref LambdaDevAlias
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/*/${ResourceEndpoint}
     Type: AWS::Lambda::Permission
 
-  ApiGatewayDeployment2:
+  ApiGatewayProdDeployment:
     Properties:
       RestApiId: !Ref ApiGateway
     DependsOn:
       - "ApiGatewayProxyMethod"
     Type: AWS::ApiGateway::Deployment
 
-  ApiGatewayStage2:
+  ApiGatewayProdStage:
     Properties:
       RestApiId: !Ref ApiGateway
-      StageName: !Ref ApiGatewayStageName2
-      DeploymentId: !Ref ApiGatewayDeployment2
+      StageName: !Ref ApiGatewayProdStageName
+      DeploymentId: !Ref ApiGatewayProdDeployment
       Variables:
-        stage: !Ref ApiGatewayStageName2
+        stage: !Ref ApiGatewayProdStageName
     DependsOn:
       - "ApiGatewayProxyMethod"
     Type: AWS::ApiGateway::Stage
 
-  Permission2:
+  ProdPermission:
     Properties:
-      FunctionName: !Ref LambdaAlias2
+      FunctionName: !Ref LambdaProdAlias
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/*/${ResourceEndpoint}
@@ -224,7 +224,7 @@ Resources:
 
 Outputs:
   ApiGatewayInvokeURL:
-    Value: !Sub https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/${ApiGatewayStageName}/${ResourceEndpoint}
+    Value: !Sub https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/${ApiGatewayDevStageName}/${ResourceEndpoint}
 
   LambdaArn:
     Value: !GetAtt LambdaFunction.Arn
