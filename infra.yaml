@@ -46,6 +46,7 @@ Resources:
       Handler: bluegreen.StreamLambdaHandler::handleRequest # code dependent
       Runtime: java11
       Timeout: 60
+      MemorySize: 4096 # Java...
       Code:
         S3Bucket: !Sub '${MavenProjectName}-output'
         S3Key: !Sub '${MavenProjectName}/app.jar'
