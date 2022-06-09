@@ -13,6 +13,10 @@ Parameters:
     Type: String
     AllowedPattern: "[a-z0-9]+"
     Default: dev
+  ApiGatewayStageName2:
+    Type: String
+    AllowedPattern: "[a-z0-9]+"
+    Default: prod
   ApiGatewayHTTPMethod:
     Type: String
     Default: ANY
@@ -54,7 +58,7 @@ Resources:
       MemorySize: 4096 # Java...
       Code:
         S3Bucket: !Ref ArtifactOutputBucket
-        S3Key: !Sub '${MavenProjectName}/app.jar'
+        S3Key: !Sub '${MavenProjectName}/app_${GitCommitId}.jar'
       Tags:
         - Key: COMMIT_ID
           Value: !Ref GitCommitId
@@ -66,18 +70,25 @@ Resources:
       RetentionInDays: 90
     Type: AWS::Logs::LogGroup
 
-  #LambdaVersion:
-  #  Properties:
-  #    FunctionName: !Ref LambdaFunction
-  #    Description: Function versionning
-  #  Type: AWS::Lambda::Version
+  LambdaVersion:
+    Properties:
+      FunctionName: !Ref LambdaFunction
+      Description: Function versionning
+    Type: AWS::Lambda::Version
 
-  #LambdaAlias:
-  #  Properties:
-  #    FunctionName: !Ref LambdaFunction
-  #    FunctionVersion: !GetAtt LambdaVersion.Version
-  #    Name: !Sub '${MavenProjectName}-alias'
-  #  Type: AWS::Lambda::Alias
+  LambdaAlias:
+    Properties:
+      FunctionName: !Ref LambdaFunction
+      FunctionVersion: !GetAtt LambdaVersion.Version
+      Name: !Ref ApiGatewayStageName
+    Type: AWS::Lambda::Alias
+
+  LambdaAlias:
+    Properties:
+      FunctionName: !Ref LambdaFunction
+      FunctionVersion: !GetAtt LambdaVersion.Version
+      Name: !Ref ApiGatewayStageName2
+    Type: AWS::Lambda::Alias
 
   ##########################
   # Api Gateway
@@ -116,6 +127,14 @@ Resources:
     Properties:
       RestApiId: !Ref ApiGateway
       StageName: !Ref ApiGatewayStageName
+    DependsOn:
+      - "ApiGatewayProxyMethod"
+    Type: AWS::ApiGateway::Deployment
+
+  ApiGatewayDeployment2:
+    Properties:
+      RestApiId: !Ref ApiGateway
+      StageName: !Ref ApiGatewayStageName2
     DependsOn:
       - "ApiGatewayProxyMethod"
     Type: AWS::ApiGateway::Deployment
