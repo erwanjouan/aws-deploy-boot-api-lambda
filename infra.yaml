@@ -46,7 +46,7 @@ Resources:
       Handler: bluegreen.StreamLambdaHandler::handleRequest # code dependent
       Runtime: java11
       Code:
-        S3Bucket: !Ref MavenProjectName
+        S3Bucket: !Sub '${MavenProjectName}-output'
         S3Key: !Sub '${MavenProjectName}/app.jar'
     Type: AWS::Lambda::Function
 
