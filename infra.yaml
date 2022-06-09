@@ -13,7 +13,7 @@ Parameters:
     Default: dev
   ApiGatewayHTTPMethod:
     Type: String
-    Default: ANY
+    Default: GET
   ResourceEndpoint:
     Type: String
     Default: '{proxy+}'
