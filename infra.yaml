@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: A Java SpringBoot application deployed with EC2 with CodeBuild/Deploy/Pipeline
+Description: A Java SpringBoot application deployed with Lambda
 Parameters:
   ProjectName:
     Type: String
@@ -43,9 +43,9 @@ Resources:
     Properties:
       FunctionName: !Ref MavenProjectName
       Role: !GetAtt LambdaExecutionRole.Arn
-      PackageType: Image
       Code:
-        ImageUri: !Sub '467420073914.dkr.ecr.eu-west-1.amazonaws.com/${MavenProjectName}:${GitCommitId}'
+        S3Bucket: !Ref MavenProjectName
+        S3Key: !Sub '${MavenProjectName}/app.jar'
     Type: AWS::Lambda::Function
 
   LambdaFunctionLogGroup:
