@@ -16,7 +16,7 @@ Parameters:
     Default: GET
   ResourceEndpoint:
     Type: String
-    Default: '{proxy+}'
+    Default: proxy
 
 Resources:
 
