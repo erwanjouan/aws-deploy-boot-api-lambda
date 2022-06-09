@@ -123,18 +123,17 @@ Resources:
           - lambdaArn: !GetAtt LambdaFunction.Arn
     Type: AWS::ApiGateway::Method
 
-  ApiGatewayDeployment:
-    Properties:
-      RestApiId: !Ref ApiGateway
-      StageName: !Ref ApiGatewayStageName
-    DependsOn:
-      - "ApiGatewayProxyMethod"
-    Type: AWS::ApiGateway::Deployment
+  #ApiGatewayDeployment:
+  #  Properties:
+  #    RestApiId: !Ref ApiGateway
+  #    StageName: !Ref ApiGatewayStageName
+  #  DependsOn:
+  #    - "ApiGatewayProxyMethod"
+  #  Type: AWS::ApiGateway::Deployment
 
   ApiGatewayStage:
     Properties:
       RestApiId: !Ref ApiGateway
-      DeploymentId: !Ref ApiGatewayDeployment
       StageName: !Ref ApiGatewayStageName
       Variables:
         stage: !Ref ApiGatewayStageName
@@ -148,21 +147,22 @@ Resources:
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/*/${ResourceEndpoint}
     Type: AWS::Lambda::Permission
 
-  ApiGatewayDeployment2:
-    Properties:
-      RestApiId: !Ref ApiGateway
-      StageName: !Ref ApiGatewayStageName2
-    DependsOn:
-      - "ApiGatewayProxyMethod"
-    Type: AWS::ApiGateway::Deployment
+  #ApiGatewayDeployment2:
+  #  Properties:
+  #    RestApiId: !Ref ApiGateway
+  #    StageName: !Ref ApiGatewayStageName2
+  #  DependsOn:
+  #    - "ApiGatewayProxyMethod"
+  #  Type: AWS::ApiGateway::Deployment
 
   ApiGatewayStage2:
     Properties:
       RestApiId: !Ref ApiGateway
-      DeploymentId: !Ref ApiGatewayDeployment2
       StageName: !Ref ApiGatewayStageName2
       Variables:
         stage: !Ref ApiGatewayStageName2
+    DependsOn:
+      - "ApiGatewayProxyMethod"
     Type: AWS::ApiGateway::Stage
 
   Permission2:
